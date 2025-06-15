@@ -47,9 +47,9 @@ function App() {
  const base = baseRaw.endsWith('/') ? baseRaw : baseRaw + '/';
 
 const images = [
-  `${base}imagens/arena1.jpg`,
   `${base}imagens/arena2.jpg`,
   `${base}imagens/arena3.jpg`,
+  `${base}imagens/arena1.jpg`,
   `${base}imagens/arena4.jpg`,
   `${base}imagens/arena5.jpg`,
   `${base}imagens/arena6.jpg`,
