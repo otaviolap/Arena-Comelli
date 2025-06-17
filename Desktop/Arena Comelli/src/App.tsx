@@ -42,8 +42,18 @@ const HalfStar = (props: React.SVGProps<SVGSVGElement>) => (
 function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [showAllTestimonials, setShowAllTestimonials] = useState(false);
 
- const baseRaw = import.meta.env.BASE_URL;
+  // Detecta se está em mobile (até md)
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const baseRaw = import.meta.env.BASE_URL;
  const base = baseRaw.endsWith('/') ? baseRaw : baseRaw + '/';
 
 const images = [
@@ -116,6 +126,11 @@ const images = [
       comment: "Ambiente incrível comida muito saborosa porém o atendimento estava havendo uma briga interna que depois foi sanada mas só uma dica chamar atenção de seus funcionários deixa para depois do expediente se não o ambiente fica pesado e funcionários descontentes. Me desculpa é só um feedback. Fora isso tudo perfeito."
     }
   ];
+
+  // Decide quantos depoimentos mostrar
+  const testimonialsToShow = isMobile && !showAllTestimonials
+    ? testimonials.slice(0, 2)
+    : testimonials;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -342,27 +357,27 @@ const images = [
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <div className="relative flex flex-col md:flex-row md:items-center md:justify-center">
-  <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 md:mb-0 text-center w-full">
-    - O que nossos clientes dizem -
-  </h2>
-  <div className="">
-  <a
-  href="https://www.google.com/search?q=arena+comeli&oq=arena+comeli&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIPCAEQLhgKGK8BGMcBGIAEMgYIAhBFGEAyCggDEAAYgAQYogQyCggEEAAYgAQYogQyCggFEAAYgAQYogTSAQgxODE4ajBqN6gCALACAA&sourceid=chrome&ie=UTF-8#lrd=0x94eaa3f397b6d79f:0x97117f58029404eb,1,,,,"
-  target="_blank"
-  rel="noopener noreferrer"
-  className="md:absolute md:right-0 md:top-1/2 md:-translate-y-1/2 flex items-center justify-center mt-4 md:mt-0 md:ml-8 bg-white/20 rounded-xl px-6 py-2 shadow-xl backdrop-blurg w-64 cursor-pointer transition hover:bg-white/40"
->
-  <span className="text-3xl font-extrabold text-yellow-400 mr-2 drop-shadow-lg">4.7</span>
-  <div className="flex space-x-1">
-    <Star className="h-7 w-7 text-yellow-400 fill-current drop-shadow" />
-    <Star className="h-7 w-7 text-yellow-400 fill-current drop-shadow" />
-    <Star className="h-7 w-7 text-yellow-400 fill-current drop-shadow" />
-    <Star className="h-7 w-7 text-yellow-400 fill-current drop-shadow" />
-    <HalfStar className="h-7 w-7 drop-shadow" />
+  <h2 className="text-2xl md:text-5xl font-bold text-white mb-4 md:mb-0 text-center w-full md:text-left md:ml-[24rem] whitespace-nowrap">
+  - O que nossos clientes dizem -
+</h2>
+  <div className="flex justify-center w-full md:static">
+    <a
+      href="https://www.google.com/search?q=arena+comeli&oq=arena+comeli&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIPCAEQLhgKGK8BGMcBGIAEMgYIAhBFGEAyCggDEAAYgAQYogQyCggEEAAYgAQYogQyCggFEAAYgAQYogTSAQgxODE4ajBqN6gCALACAA&sourceid=chrome&ie=UTF-8#lrd=0x94eaa3f397b6d79f:0x97117f58029404eb,1,,,,"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex items-center justify-center mt-4 md:mt-0 md:ml-8 bg-white/20 rounded-xl px-6 py-2 shadow-xl backdrop-blurg w-64 cursor-pointer transition hover:bg-white/40 md:absolute md:right-0 md:top-1/2 md:-translate-y-1/2"
+    >
+      <span className="text-3xl font-extrabold text-yellow-400 mr-2 drop-shadow-lg">4.7</span>
+      <div className="flex space-x-1">
+        <Star className="h-7 w-7 text-yellow-400 fill-current drop-shadow" />
+        <Star className="h-7 w-7 text-yellow-400 fill-current drop-shadow" />
+        <Star className="h-7 w-7 text-yellow-400 fill-current drop-shadow" />
+        <Star className="h-7 w-7 text-yellow-400 fill-current drop-shadow" />
+        <HalfStar className="h-7 w-7 drop-shadow" />
+      </div>
+      <span className="ml-3 text-white text-base font-medium"></span>
+    </a>
   </div>
-  <span className="ml-3 text-white text-base font-medium"></span>
-</a>
-</div>
 </div>
             <p className="text-xl text-green-100 max-w-2xl mx-auto mt-6">
               Experiências reais de quem já visitou a Arena Comelli
@@ -370,7 +385,7 @@ const images = [
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
+            {testimonialsToShow.map((testimonial, index) => (
               <div key={index} className="bg-white rounded-2xl p-8 shadow-xl transform hover:scale-105 transition-all duration-300">
                 <div className="flex mb-4">
                   {[...Array(testimonial.rating)].map((_, i) => (
@@ -386,6 +401,17 @@ const images = [
               </div>
             ))}
           </div>
+          {/* Botão Ver mais/Ver menos apenas no mobile */}
+          {isMobile && testimonials.length > 2 && (
+            <div className="flex justify-center mt-8 md:hidden">
+              <button
+                className="bg-white text-[#34cc34] font-semibold px-6 py-2 rounded-full shadow hover:bg-gray-100 transition"
+                onClick={() => setShowAllTestimonials(v => !v)}
+              >
+                {showAllTestimonials ? 'Ver menos' : 'Ver mais'}
+              </button>
+            </div>
+          )}
         </div>
       </section>
 
@@ -393,22 +419,23 @@ const images = [
       <section id="contato" className="py-20 bg-gray-800 text-white">
         <div className="container mx-auto px-4">
           <div className="flex items-center w-full mb-12">
-  {/* Logos à esquerda */}
-  <div className="flex space-x-3">
+  {/* Logos e texto centralizados no mobile */}
+<div className="flex flex-col items-center md:flex-row md:items-center w-full mb-12">
+  {/* Logos */}
+  <div className="flex space-x-3 mb-4 md:mb-0">
     <img className="rounded-full w-20 h-20" src={`${base}imagens/logo-arena-comelli.jpg`} alt="Arena Comelli" />
-<img className="rounded-full w-20 h-20" src={`${base}imagens/logo-arena-pesca.jpg`} alt="Arena Pesca Esportiva" />
-<img className="rounded-full w-20 h-20" src={`${base}imagens/logo-arena-grill.jpg`} alt="Arena Grill" />
+    <img className="rounded-full w-20 h-20" src={`${base}imagens/logo-arena-pesca.jpg`} alt="Arena Pesca Esportiva" />
+    <img className="rounded-full w-20 h-20" src={`${base}imagens/logo-arena-grill.jpg`} alt="Arena Grill" />
   </div>
-  {/* Espaço flexível entre logos e texto */}
-  <div className="flex-1" />
-  {/* Texto centralizado */}
-  <div className="text-left flex-shrink-0 -ml-64">
-  <h2 className="text-4xl md:text-5xl font-bold mb-2">
-    Entre em <span className="text-[#34cc34]">Contato</span>
-  </h2>
-  <p className="text-xl text-gray-300 max-w-2xl">
-    Venha nos visitar e viva uma experiência única
-  </p>
+  {/* Texto centralizado no mobile, afastado no desktop */}
+  <div className="text-center md:text-left md:ml-64">
+    <h2 className="text-4xl md:text-5xl font-bold mb-2">
+      Entre em <span className="text-[#34cc34]">Contato</span>
+    </h2>
+    <p className="text-xl text-gray-300 max-w-2xl">
+      Venha nos visitar e viva uma experiência única
+    </p>
+  </div>
 </div>
   {/* Espaço flexível à direita para centralizar o texto */}
   <div className="flex-1" />
