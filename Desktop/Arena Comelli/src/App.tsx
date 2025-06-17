@@ -176,7 +176,7 @@ const images = [
         <div className="flex flex-col space-y-4 mt-4">
           <a href="#inicio" className="text-gray-700 hover:text-[#34cc34] transition-colors font-semibold text-lg">Início</a>
           <a href="#servicos" className="text-gray-700 hover:text-[#34cc34] transition-colors font-semibold text-lg">Serviços</a>
-          <a href="#cardapio" className="text-gray-700 hover:text-[#34cc34] transition-colors font-semibold text-lg">Cardápio</a>
+          <a href="#cardapio" className="text-gray-700 hover:tex  t-[#34cc34] transition-colors font-semibold text-lg">Cardápio</a>
           <a href="#galeria" className="text-gray-700 hover:text-[#34cc34] transition-colors font-semibold text-lg">Galeria</a>
           <a href="#contato" className="text-gray-700 hover:text-[#34cc34] transition-colors font-semibold text-lg">Contato</a>
         </div>
